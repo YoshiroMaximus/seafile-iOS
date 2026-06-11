@@ -581,6 +581,10 @@ typedef void (^ModificationHandler)(NSString *repoId, NSString *path);
     NSString *etype = [event objectForKey:@"etype"];
     if ([_connection isNewActivitiesApiSupported]) {
         NSString *name = [event objectForKey:@"name"];
+        // JSON null arrives as NSNull; normalize so containsString:/toast formatting stay safe
+        if (![name isKindOfClass:[NSString class]]) {
+            name = @"";
+        }
         NSString *op_type = [event objectForKey:@"op_type"];
         NSString *obj_type = [event objectForKey:@"obj_type"];
         if ([obj_type containsString:@"draft"] && [op_type isEqualToString:@"publish"]) {
