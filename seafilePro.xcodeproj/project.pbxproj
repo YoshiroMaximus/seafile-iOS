@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -46,8 +46,8 @@
 		577B6C6616AADBA3008E82C2 /* SeafCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 577B6C6416AADBA3008E82C2 /* SeafCell.m */; };
 		57814AF81AA8B55000D1D5D8 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57814AF71AA8B55000D1D5D8 /* Photos.framework */; };
 		57814AFA1AA8B55000D1D5D8 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57814AF91AA8B55000D1D5D8 /* PhotosUI.framework */; };
-		57A029771A16F8AD009C9D7B /* SeafFileProvider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 57A0296D1A16F8AD009C9D7B /* SeafFileProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		57A0297A1A16F8AD009C9D7B /* SeafFileProviderUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 57A0295F1A16F8AC009C9D7B /* SeafFileProviderUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		57A029771A16F8AD009C9D7B /* SeafFileProvider.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 57A0296D1A16F8AD009C9D7B /* SeafFileProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		57A0297A1A16F8AD009C9D7B /* SeafFileProviderUI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 57A0295F1A16F8AC009C9D7B /* SeafFileProviderUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		57A029861A16F91F009C9D7B /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A029821A16F91F009C9D7B /* DocumentPickerViewController.m */; };
 		57A0298E1A16F935009C9D7B /* FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A0298B1A16F935009C9D7B /* FileProvider.m */; };
 		57A0299B1A16F95D009C9D7B /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57A029981A16F95D009C9D7B /* MainInterface.storyboard */; };
@@ -57,7 +57,7 @@
 		57ABE5FB187925B300145FE3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576B9918186142EC00A16ED6 /* CoreText.framework */; };
 		57B14B6E1DF5325B0045112E /* ActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57B14B6D1DF5325B0045112E /* ActionViewController.m */; };
 		57B14B711DF5325B0045112E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57B14B6F1DF5325B0045112E /* MainInterface.storyboard */; };
-		57B14B751DF5325B0045112E /* SeafAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 57B14B6A1DF5325A0045112E /* SeafAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		57B14B751DF5325B0045112E /* SeafAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 57B14B6A1DF5325A0045112E /* SeafAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		57D189D0182E0A380029A797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57D189CE182E0A380029A797 /* Images.xcassets */; };
 		57DA26F5173E6DFC0003BA31 /* SeafTextEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DA26F3173E6DFC0003BA31 /* SeafTextEditorViewController.m */; };
 		57E5E7B31CC219C8004B7125 /* SeafEventCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 57E5E7B11CC219C8004B7125 /* SeafEventCell.m */; };
@@ -699,13 +699,13 @@
 		F568C1FB1EF10F8900F1035D /* SeafActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = F568C1FA1EF10F8900F1035D /* SeafActionSheet.m */; };
 		F5AD6ADF24C42D140067F9AF /* DocumentActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AD6ADE24C42D140067F9AF /* DocumentActionViewController.m */; };
 		F5AD6AE224C42D140067F9AF /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5AD6AE024C42D140067F9AF /* MainInterface.storyboard */; };
-		F5AD6AE624C42D140067F9AF /* SeafFileProviderActionsUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F5AD6ADB24C42D140067F9AF /* SeafFileProviderActionsUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F5AD6AE624C42D140067F9AF /* SeafFileProviderActionsUI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F5AD6ADB24C42D140067F9AF /* SeafFileProviderActionsUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F5ADEA042081B69C00FB6451 /* SeafMkLibAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5ADEA022081B69C00FB6451 /* SeafMkLibAlertController.m */; };
 		F5B209092169994000762342 /* SeafInputItemsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B209072169993F00762342 /* SeafInputItemsProvider.m */; };
 		F5B2090A2169994000762342 /* SeafInputItemsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B209072169993F00762342 /* SeafInputItemsProvider.m */; };
 		F5B2090B2169994000762342 /* SeafInputItemsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B209072169993F00762342 /* SeafInputItemsProvider.m */; };
 		F5C648FD210A0B4E00842687 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5C648FB210A0B4E00842687 /* MainInterface.storyboard */; };
-		F5C64901210A0B4E00842687 /* SeafShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F5C648F6210A0B4E00842687 /* SeafShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F5C64901210A0B4E00842687 /* SeafShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F5C648F6210A0B4E00842687 /* SeafShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F5C64905210A259A00842687 /* SeafGlobal.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D40A621E9AF72200A68BEF /* SeafGlobal.m */; };
 		F5C64906210A25DB00842687 /* UIViewController+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D40A601E9AF72200A68BEF /* UIViewController+Extend.m */; };
 		F5C64908210A25EB00842687 /* SeafAccountCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D40A661E9AF72200A68BEF /* SeafAccountCell.m */; };
@@ -1096,19 +1096,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		57E228E51A0F4EE700C92330 /* Embed App Extensions */ = {
+		57E228E51A0F4EE700C92330 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				57A0297A1A16F8AD009C9D7B /* SeafFileProviderUI.appex in Embed App Extensions */,
-				F5C64901210A0B4E00842687 /* SeafShare.appex in Embed App Extensions */,
-				F5AD6AE624C42D140067F9AF /* SeafFileProviderActionsUI.appex in Embed App Extensions */,
-				57A029771A16F8AD009C9D7B /* SeafFileProvider.appex in Embed App Extensions */,
-				57B14B751DF5325B0045112E /* SeafAction.appex in Embed App Extensions */,
+				57A0297A1A16F8AD009C9D7B /* SeafFileProviderUI.appex in Embed Foundation Extensions */,
+				F5C64901210A0B4E00842687 /* SeafShare.appex in Embed Foundation Extensions */,
+				F5AD6AE624C42D140067F9AF /* SeafFileProviderActionsUI.appex in Embed Foundation Extensions */,
+				57A029771A16F8AD009C9D7B /* SeafFileProvider.appex in Embed Foundation Extensions */,
+				57B14B751DF5325B0045112E /* SeafAction.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -2334,7 +2334,7 @@
 				571D8CAA1677881400F1A22C /* Sources */,
 				571D8CDC1677881400F1A22C /* Frameworks */,
 				571D8CE51677881400F1A22C /* Resources */,
-				57E228E51A0F4EE700C92330 /* Embed App Extensions */,
+				57E228E51A0F4EE700C92330 /* Embed Foundation Extensions */,
 				DBA7E67946E92470596B2A9A /* [CP] Copy Pods Resources */,
 				9E2F4AEC96F8B824B4949796 /* Headers */,
 				E0E4C1C7C3B017D53092AAF1 /* [CP] Embed Pods Frameworks */,
@@ -2455,8 +2455,9 @@
 		57DB826415A833F900097CEC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = Seaf;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 2650;
 				ORGANIZATIONNAME = Seafile;
 				TargetAttributes = {
 					571D8CA91677881400F1A22C = {
@@ -4031,7 +4032,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DBDEFA043CD6CF7650726549 /* Pods-seafileApp.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
@@ -4042,7 +4042,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "seafile/Supporting Files/seafile-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -4063,7 +4062,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B6C7801D49498095B24DB644 /* Pods-seafileApp.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
@@ -4074,7 +4072,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "seafile/Supporting Files/seafile-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -4095,7 +4092,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 66A0A85ED1C1808578E903C2 /* Pods-SeafFileProvider.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4109,7 +4105,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4119,7 +4114,10 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/SeafFileProvider/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.seafile.seafilePro.$(PRODUCT_NAME:rfc1034identifier)";
@@ -4133,7 +4131,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 948B9BFC1AD5D795756A9E90 /* Pods-SeafFileProvider.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4147,14 +4144,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/SeafFileProvider/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.seafile.seafilePro.$(PRODUCT_NAME:rfc1034identifier)";
@@ -4168,7 +4167,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71B308DC2DFEC09F58232B49 /* Pods-SeafFileProviderUI.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4182,7 +4180,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -4192,7 +4189,10 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/SeafFileProviderUI/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -4207,7 +4207,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 61E5C5D580570C70D8130145 /* Pods-SeafFileProviderUI.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4221,14 +4220,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/SeafFileProviderUI/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -4258,7 +4259,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4268,7 +4268,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = SeafAction/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seafile.seafilePro.SeafAction;
@@ -4297,14 +4301,17 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = "$(inherited)";
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = SeafAction/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seafile.seafilePro.SeafAction;
@@ -4316,7 +4323,6 @@
 		57DB829415A833FA00097CEC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -4324,20 +4330,25 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 55LCTZ5354;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -4361,6 +4372,7 @@
 				OTHER_CFLAGS = "";
 				"PRIVATE_HEADERS_FOLDER_PATH[sdk=*]" = "";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -4368,7 +4380,6 @@
 		57DB829515A833FA00097CEC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -4376,19 +4387,24 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 55LCTZ5354;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/seafile/Supporting Files/seafile-Prefix.pch";
@@ -4403,6 +4419,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4428,7 +4445,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4438,7 +4454,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = SeafFileProviderActionsUI/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -4470,14 +4490,17 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = SeafFileProviderActionsUI/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -4510,7 +4533,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4520,7 +4542,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = SeafShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seafile.seafilePro.SeafShare;
@@ -4553,14 +4579,17 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 55LCTZ5354;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = SeafShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 4.0.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.seafile.seafilePro.SeafShare;
