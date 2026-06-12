@@ -138,6 +138,8 @@ static NSString * const kSeafBridgeHelperScript =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // The sdoc editor web content is server-rendered and light-only.
+    self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
     [self setupAppearance];
     [self configureNavigationItems];
     [self configureEditButton];
@@ -235,12 +237,6 @@ static NSString * const kSeafBridgeHelperScript =
     
     // Tint color
     self.navigationController.navigationBar.tintColor = BAR_COLOR;
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barApp = [UINavigationBarAppearance new];
-        barApp.backgroundColor = [UIColor whiteColor];
-        self.navigationController.navigationBar.standardAppearance = barApp;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barApp;
-    }
 }
 
 - (void)configureEditButton
@@ -295,12 +291,7 @@ static NSString * const kSeafBridgeHelperScript =
     }
     [self.view addSubview:self.webView];
 
-    NSLayoutYAxisAnchor *topAnchor = nil;
-    if (@available(iOS 11.0, *)) {
-        topAnchor = self.view.safeAreaLayoutGuide.topAnchor;
-    } else {
-        topAnchor = self.topLayoutGuide.bottomAnchor;
-    }
+    NSLayoutYAxisAnchor *topAnchor = self.view.safeAreaLayoutGuide.topAnchor;
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray arrayWithArray:@[
         [self.webView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
         [self.webView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
@@ -1381,7 +1372,7 @@ static NSString * const kSeafBridgeHelperScript =
             if ([payload isKindOfClass:[NSString class]]) [self showToast:(NSString *)payload];
         } else if ([action isEqualToString:@"page.finish"]) {
         } else if ([action isEqualToString:@"page.status.height.get"]) {
-            CGFloat h = UIApplication.sharedApplication.statusBarFrame.size.height;
+            CGFloat h = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
             [self sendBridgeCallback:[@(h) stringValue]];
         } else if ([action isEqualToString:@"sdoc.editor.content.select"]) {
             // Handle selection change
@@ -1516,11 +1507,7 @@ static NSString * const kSeafBridgeHelperScript =
 
 - (NSLayoutYAxisAnchor *)contentBottomAnchor
 {
-    if (@available(iOS 11.0, *)) {
-        return self.view.safeAreaLayoutGuide.bottomAnchor;
-    } else {
-        return self.bottomLayoutGuide.topAnchor;
-    }
+    return self.view.safeAreaLayoutGuide.bottomAnchor;
 }
 
 - (void)applyKeyboardHeight:(CGFloat)keyboardHeight duration:(NSTimeInterval)duration curve:(UIViewAnimationCurve)curve

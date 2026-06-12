@@ -70,16 +70,10 @@
 
 #pragma mark - Asset Management
 
-- (void)setAsset:(PHAsset *)asset url:(NSURL *)url identifier:(NSString *)identifier {
+- (void)setAsset:(PHAsset *)asset identifier:(NSString *)identifier {
     _asset = asset;
-    _assetURL = url;
     _assetIdentifier = [identifier copy];
-    
-    // If the file name is empty, get it from the URL
-    if (!self.name || [self.name isEqualToString:@""]) {
-        self.name = [url lastPathComponent];
-    }
-    
+
     if (asset) {
         _starred = asset.isFavorite;
     }

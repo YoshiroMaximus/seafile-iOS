@@ -118,7 +118,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
     UILabel *label = [[UILabel alloc] init];
     label.translatesAutoresizingMaskIntoConstraints = NO;
     label.text = NSLocalizedString(@"Return to previous level", @"Seafile");
-    if (@available(iOS 13.0, *)) label.textColor = [UIColor secondaryLabelColor]; else label.textColor = [UIColor grayColor];
+    label.textColor = [UIColor secondaryLabelColor];
     label.font = [UIFont systemFontOfSize:16 weight:UIFontWeightRegular];
     [self.fixedReturnHeaderView addSubview:label];
 
@@ -148,7 +148,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
     // Bottom separator for visual separation from list
     UIView *sep = [[UIView alloc] init];
     sep.translatesAutoresizingMaskIntoConstraints = NO;
-    if (@available(iOS 13.0, *)) sep.backgroundColor = [UIColor separatorColor]; else sep.backgroundColor = [UIColor lightGrayColor];
+    sep.backgroundColor = [UIColor separatorColor];
     [self.fixedReturnHeaderView addSubview:sep];
     [NSLayoutConstraint activateConstraints:@[
         [sep.leadingAnchor constraintEqualToAnchor:self.fixedReturnHeaderView.leadingAnchor],
@@ -215,7 +215,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
         if (@available(iOS 13.0, *)) {
             plusBtn.tintColor = [UIColor labelColor];
         } else {
-            plusBtn.tintColor = [UIColor blackColor];
+            plusBtn.tintColor = [UIColor labelColor];
         }
     }
     // Remove outlined style (no border)
@@ -231,22 +231,6 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
     pw.active = YES; ph.active = YES;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:plusBtn];
 
-    // Make navigation bar opaque with white background so the status bar area is also white
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-    if (@available(iOS 13.0, *)) {
-        UINavigationBarAppearance *navAp = [UINavigationBarAppearance new];
-        [navAp configureWithOpaqueBackground];
-        navAp.backgroundColor = [UIColor whiteColor];
-        self.navigationController.navigationBar.standardAppearance = navAp;
-        self.navigationController.navigationBar.scrollEdgeAppearance = navAp;
-    } else {
-        self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-        self.navigationController.navigationBar.translucent = NO;
-    }
-#else
-    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.translucent = NO;
-#endif
 }
 
 - (void)updateTitleView
@@ -297,7 +281,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
     btn.titleLabel.minimumScaleFactor = 0.85;
     btn.titleLabel.textAlignment = NSTextAlignmentCenter;
     UIColor *normalColor = nil;
-    if (@available(iOS 13.0, *)) normalColor = [UIColor secondaryLabelColor]; else normalColor = [UIColor grayColor];
+    normalColor = [UIColor secondaryLabelColor];
     [btn setTitleColor:normalColor forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(onTabTapped:) forControlEvents:UIControlEventTouchUpInside];
     btn.tag = tag;
@@ -308,7 +292,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
 {
     self.tabsBar = [[UIView alloc] init];
     self.tabsBar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.tabsBar.backgroundColor = [UIColor whiteColor];
+    self.tabsBar.backgroundColor = [UIColor systemBackgroundColor];
     [self.view addSubview:self.tabsBar];
 
     UILayoutGuide *guide = self.view.safeAreaLayoutGuide;
@@ -389,7 +373,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
     self.underlineWidthConstraint.active = YES;
     UIColor *primaryColor = BAR_COLOR_ORANGE ?: [UIColor systemOrangeColor];
     UIColor *normalColor = nil;
-    if (@available(iOS 13.0, *)) normalColor = [UIColor secondaryLabelColor]; else normalColor = [UIColor grayColor];
+    normalColor = [UIColor secondaryLabelColor];
     [self.tabButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull b, NSUInteger i, BOOL * _Nonnull stop) {
         BOOL selected = (i == (NSUInteger)idx);
         [b setTitleColor:(selected ? primaryColor : normalColor) forState:UIControlStateNormal];
@@ -472,7 +456,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
 
     UIColor *primaryColor = BAR_COLOR_ORANGE ?: [UIColor systemOrangeColor];
     self.cancelButton = [self buildActionButtonWithTitle:NSLocalizedString(@"Cancel", @"Seafile")
-                                              background:[UIColor whiteColor]
+                                              background:[UIColor systemBackgroundColor]
                                               titleColor:(SeafColor_Label)
                                                 selector:@selector(onCancel:)];
     self.cancelButton.isAccessibilityElement = YES;
@@ -678,7 +662,7 @@ typedef NS_ENUM(NSInteger, SeafDestSegment) {
     self.recentTableView.dataSource = self;
     self.recentTableView.delegate = self;
     // Rounded corners on the table directly
-    self.recentTableView.backgroundColor = [UIColor whiteColor];
+    self.recentTableView.backgroundColor = [UIColor systemBackgroundColor];
     [self applyRoundedCornersForRecentIfNeeded];
     // Register destination style cell class for consistent visuals
     [self.recentTableView registerClass:[SeafDestCell class] forCellReuseIdentifier:@"SeafDestCell"];

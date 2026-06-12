@@ -7,6 +7,7 @@
 //
 
 #import "SeafSearchResultViewController.h"
+#import "Utils.h"
 #import "SVProgressHUD.h"
 #import "SeafRepos.h"
 #import "Debug.h"
@@ -76,7 +77,7 @@
     [super viewWillLayoutSubviews];
     
     CGFloat heightToSubtract = 0;
-    UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *rootVC = [SeafAppDelegate sea_keyWindow].rootViewController;
     if ([rootVC isKindOfClass:[UITabBarController class]]) {
         UITabBarController *tabBarController = (UITabBarController *)rootVC;
         if (!tabBarController.tabBar.isHidden) {
@@ -86,7 +87,7 @@
 
     if (heightToSubtract == 0) {
         if (@available(iOS 11.0, *)) {
-            UIWindow *window = [UIApplication sharedApplication].keyWindow;
+            UIWindow *window = [SeafAppDelegate sea_keyWindow];
             heightToSubtract = window.safeAreaInsets.bottom;
         }
     }

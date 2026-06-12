@@ -80,14 +80,6 @@
     self.navigationItem.leftBarButtonItems = litems;
     [[self textView] setText:_previewFile.strContent];
     [[self textView] setFont:[UIFont fontWithName:@"Courier" size:14.0]];
-    
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
-        barAppearance.backgroundColor = [UIColor whiteColor];
-        
-        self.navigationController.navigationBar.standardAppearance = barAppearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barAppearance;
-    }
 }
 
 - (void)didReceiveMemoryWarning

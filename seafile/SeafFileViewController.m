@@ -7,6 +7,7 @@
 //
 
 #import "SeafAppDelegate.h"
+#import "Utils.h"
 #import "SeafFileViewController.h"
 #import "SeafDetailViewController.h"
 #import "SeafSdocWebViewController.h"
@@ -44,7 +45,6 @@
 #import "SeafMkLibAlertController.h"
 #import "SeafActionsManager.h"
 #import "SeafSearchResultViewController.h"
-#import "UISearchBar+SeafExtend.h"
 #import "UIImage+FileType.h"
 #import "SeafUploadOperation.h"
 #import "SeafFileOperationManager.h"
@@ -211,16 +211,8 @@ enum {
     self.tableView.tableFooterView = [UIView new];
     self.tableView.allowsMultipleSelection = NO;
 
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
-        barAppearance.backgroundColor = [UIColor whiteColor];
-        
-        self.navigationController.navigationBar.standardAppearance = barAppearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barAppearance;
-        
-        self.tableView.sectionHeaderTopPadding = 0;
-    }
-    
+    self.tableView.sectionHeaderTopPadding = 0;
+
     self.navigationController.navigationBar.tintColor = BAR_COLOR;
     [self.navigationController setToolbarHidden:YES animated:NO];
     
@@ -358,7 +350,7 @@ enum {
         // Add selection count label
         UILabel *countLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 0, containerView.frame.size.width - 24 - 20, 44)];
         countLabel.font = [UIFont systemFontOfSize:17];
-        countLabel.textColor = [UIColor blackColor];
+        countLabel.textColor = [UIColor labelColor];
         countLabel.text = NSLocalizedString(@"Select items", @"Seafile");
         [containerView addSubview:countLabel];
         
@@ -966,7 +958,7 @@ enum {
 - (void)showLoadingView
 {
     // Get the key window for proper centering in the entire screen
-    UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+    UIWindow *keyWindow = [SeafAppDelegate sea_keyWindow];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         // Only show loading view if still in loading state
         if (self.state == STATE_LOADING) {
@@ -1502,7 +1494,6 @@ enum {
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     [navController setModalPresentationStyle:UIModalPresentationFullScreen];
     navController.navigationBar.tintColor = BAR_COLOR;
-    navController.navigationBar.backgroundColor = [UIColor whiteColor];
     [self presentViewController:navController animated:YES completion:nil];
 }
 
@@ -1658,7 +1649,7 @@ enum {
             Debug("Live Photo detected, will upload as Motion Photo: %@", filename);
         }
         
-        [file setPHAsset:asset url:photoAsset.ALAssetURL];
+        [file setPHAsset:asset];
         file.delegate = self;
         [files addObject:file];
         [self.directory addUploadFile:file];
@@ -3014,23 +3005,13 @@ enum {
             _searchController.searchBar.layoutMargins = UIEdgeInsetsMake(0, 42, 0, 0);
         }
         
-        // Configure search bar appearance like system search - Light gray background
-        UIColor *lightGrayColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0]; // Light gray
-        _searchController.searchBar.barTintColor = lightGrayColor;
-        _searchController.searchBar.backgroundColor = lightGrayColor;
-        
-        // Remove any background images to show the default system appearance
-        [_searchController.searchBar setBackgroundImage:nil forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-        [_searchController.searchBar setBackgroundImage:nil];
-        
-        // Set the overall tint color for the search bar elements (custom buttons, cursor etc.)
+        // Let the system (Liquid Glass) search bar styling apply; only set tint.
         _searchController.searchBar.tintColor = BAR_COLOR;
-        
+
         // Set placeholder text style and color
-        if (@available(iOS 13.0, *)) {
+        {
             UITextField *searchField = _searchController.searchBar.searchTextField;
             searchField.placeholder = NSLocalizedString(@"Search files in this library", @"Seafile");
-            searchField.backgroundColor = [UIColor whiteColor]; // Changed to white
 
             // Add custom search icon to the left of the text field
             UIImage *searchIcon = [[UIImage imageNamed:@"fileNav_search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -3047,26 +3028,6 @@ enum {
             
             searchField.leftView = leftViewContainer;
             searchField.leftViewMode = UITextFieldViewModeAlways;
-        } else {
-            // For older iOS versions
-            _searchController.searchBar.placeholder = NSLocalizedString(@"Search files in this library", @"Seafile");
-        }
-        
-        // Configure custom appearance for search presentation
-        if (@available(iOS 15.0, *)) {
-            UINavigationBarAppearance *searchBarAppearance = [[UINavigationBarAppearance alloc] init];
-            [searchBarAppearance configureWithOpaqueBackground];
-            searchBarAppearance.backgroundColor = [UIColor whiteColor]; // Same as navigation bar
-            
-            // Apply to navigation bar instead of search bar
-            self.navigationController.navigationBar.standardAppearance = searchBarAppearance;
-            self.navigationController.navigationBar.scrollEdgeAppearance = searchBarAppearance;
-            
-            // For search bar, we can only set these properties
-            if (@available(iOS 13.0, *)) {
-                // System default styling will now largely apply to the text field
-            }
-            _searchController.searchBar.tintColor = BAR_COLOR;
         }
         
         // Hide the Cancel button
@@ -3182,7 +3143,7 @@ enum {
     
     CGFloat pureHomeIndicator = 0;
     if (@available(iOS 11.0, *)) {
-        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        UIWindow *window = [SeafAppDelegate sea_keyWindow];
            pureHomeIndicator = window.safeAreaInsets.bottom;
     }
 
@@ -3194,12 +3155,12 @@ enum {
     
     // Create custom view
     UIView *customToolView = [[UIView alloc] initWithFrame:frame];
-    customToolView.backgroundColor = [UIColor whiteColor];
+    customToolView.backgroundColor = [UIColor systemBackgroundColor];
     
     // Add top border
     CALayer *topBorder = [CALayer layer];
     topBorder.frame = CGRectMake(0, 0, customToolView.frame.size.width, 0.5);
-    topBorder.backgroundColor = [UIColor lightGrayColor].CGColor;
+    topBorder.backgroundColor = [UIColor separatorColor].CGColor;
     [customToolView.layer addSublayer:topBorder];
     
     // First row buttons - 5 buttons
@@ -3244,19 +3205,8 @@ enum {
     customToolView.frame = initialFrame;
     
     // Add to key window to prevent scrolling with tableView
-    UIWindow *keyWindow = nil;
-    if (@available(iOS 13.0, *)) {
-        NSArray<UIWindowScene *> *scenes = UIApplication.sharedApplication.connectedScenes.allObjects;
-        for (UIWindowScene *scene in scenes) {
-            if (scene.activationState == UISceneActivationStateForegroundActive) {
-                keyWindow = scene.windows.firstObject;
-                break;
-            }
-        }
-    } else {
-        keyWindow = UIApplication.sharedApplication.keyWindow;
-    }
-    
+    UIWindow *keyWindow = [SeafAppDelegate sea_keyWindow];
+
     [keyWindow addSubview:customToolView];
     
     // Store reference

@@ -161,7 +161,7 @@ static BOOL disableCustomEasing = NO;
     self.layer.shadowOpacity = kShadowOpacity;
     
     self.layer.contentsScale = [UIScreen mainScreen].scale;
-    ((CAShapeLayer *)self.layer).fillColor = [UIColor whiteColor].CGColor;
+    ((CAShapeLayer *)self.layer).fillColor = [UIColor systemBackgroundColor].CGColor;
     ((CAShapeLayer *)self.layer).strokeColor = [UIColor clearColor].CGColor;
 }
 
@@ -262,11 +262,11 @@ static BOOL disableCustomEasing = NO;
     }
 
     [b setTitle:displayTitle forState:UIControlStateNormal];
-    [b setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [b setTitleColor:[UIColor labelColor] forState:UIControlStateNormal];
     [b setTitleEdgeInsets:titleInsets];
     [b addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [b setBackgroundImage:[self pixelImageWithColor:[UIColor colorWithWhite:1.0 alpha:1.0]] forState:UIControlStateNormal];
-    [b setBackgroundImage:[self pixelImageWithColor:[UIColor colorWithWhite:0.8 alpha:1.0]] forState:UIControlStateHighlighted];
+    [b setBackgroundImage:[self pixelImageWithColor:[UIColor systemBackgroundColor]] forState:UIControlStateNormal];
+    [b setBackgroundImage:[self pixelImageWithColor:[UIColor systemGray4Color]] forState:UIControlStateHighlighted];
     
     // Configure adaptive font size
     b.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -282,7 +282,7 @@ static BOOL disableCustomEasing = NO;
     
     if (!enabled) {
         b.enabled = NO;
-        [b setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [b setTitleColor:[UIColor tertiaryLabelColor] forState:UIControlStateNormal];
     }
     
     b.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -590,7 +590,7 @@ static BOOL disableCustomEasing = NO;
 - (void)layoutSheetInitial:(BOOL)initial {
     self.frame = [self topWindow].bounds;
     
-    _scrollViewHost.backgroundColor = [UIColor whiteColor]; // White background
+    _scrollViewHost.backgroundColor = [UIColor systemBackgroundColor];
 
     CGRect frame = self.frame;
     // Use fixed width of 200
@@ -836,7 +836,7 @@ static BOOL disableCustomEasing = NO;
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Invalid arrow direction" userInfo:nil];
         }
 
-        _scrollViewHost.backgroundColor = [UIColor whiteColor]; // Maintain white background
+        _scrollViewHost.backgroundColor = [UIColor systemBackgroundColor];
         
         // Let layoutSheetForFrame calculate exact content height
         [self layoutSheetForFrame:finalFrame fitToRect:NO initialSetUp:YES];

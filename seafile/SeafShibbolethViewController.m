@@ -15,14 +15,11 @@
 
 #import "Debug.h"
 
-@interface SeafShibbolethViewController ()<WKNavigationDelegate, NSURLConnectionDelegate,UINavigationControllerDelegate>
+@interface SeafShibbolethViewController ()<WKNavigationDelegate, UINavigationControllerDelegate>
 
 @property (strong) SeafConnection *sconn;// Connection to the Seafile server
-@property (strong) NSURLRequest *FailedRequest;
-@property (strong) NSURLConnection *conn;// Network connection used for certain requests
 @property (strong, nonatomic) WKWebView *webView;// WebKit view for handling Shibboleth authentication
 @property (strong, nonatomic) UIProgressView *progressView;
-@property BOOL authenticated;// Flag to check if authentication has occurred
 @property (strong, nonatomic) NSTimer *timer;//to get the sso login status every 15s.
 @property (strong, nonatomic) NSString *ssoLinkToken;//sso login urlString.
 @property (assign, nonatomic) BOOL isSSOLoginSuccess;// Indicate whether the SSO login was successful.
@@ -73,6 +70,8 @@
     [super viewDidLoad];
     [self setupNotifications];
     // Do any additional setup after loading the view from its nib.
+    // SSO pages are server-rendered and light-only; keep this screen light.
+    self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
     self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.delegate = self;
     [self start];
@@ -99,7 +98,6 @@
 - (void)start
 {
     //From 2.9.27
-    _authenticated = true;
     _ssoLinkToken = @"";
     _isSSOLoginSuccess = false;
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:self.serverInfo]];
@@ -133,11 +131,9 @@
 - (void)oldSSOLoginStart {
     //Before 2.9.26
     if ([_sconn.address hasPrefix:@"http://"]) {
-        _authenticated = true;
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.shibbolethUrl]];
         [self webviewLoadRequest:request];
     } else {
-        _authenticated = false;
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.pingUrl]];
         Debug("Ping %@", self.pingUrl);
         [self loadRequestBackground:request];
@@ -335,46 +331,34 @@
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(nonnull WKNavigationAction *)navigationAction decisionHandler:(nonnull void (^)(WKNavigationActionPolicy))decisionHandler {
-    Debug("load request: %@, %d", navigationAction.request.URL, _authenticated);
-    //whether if ping response correct
-    if (!_authenticated) {
-        _FailedRequest = navigationAction.request;
-        self.conn = [[NSURLConnection alloc] initWithRequest:_FailedRequest delegate:self];
-        decisionHandler(WKNavigationActionPolicyCancel);
-    } else {
-        decisionHandler(WKNavigationActionPolicyAllow);
-    }
+    Debug("load request: %@", navigationAction.request.URL);
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
--(void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
-    Debug("authenticationMethod: %@", challenge.protectionSpace.authenticationMethod);
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        NSURL* baseURL = [NSURL URLWithString:self.shibbolethUrl];
+// WKWebView surfaces TLS/client-cert challenges directly; trust the configured
+// server host (self-signed certs included) the same way the API connection does.
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
+    NSString *method = challenge.protectionSpace.authenticationMethod;
+    Debug("authenticationMethod: %@", method);
+    if ([method isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        NSURL *baseURL = [NSURL URLWithString:self.shibbolethUrl];
         if ([challenge.protectionSpace.host isEqualToString:baseURL.host] || SeafServerTrustIsValid(challenge.protectionSpace.serverTrust)) {
-            NSLog(@"trusting connection to host %@", challenge.protectionSpace.host);
-            [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+            Debug("trusting connection to host %@", challenge.protectionSpace.host);
+            completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
         } else {
-            NSLog(@"Not trusting connection to host %@", challenge.protectionSpace.host);
+            Warning("Not trusting connection to host %@", challenge.protectionSpace.host);
+            completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, nil);
         }
-    } else if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate]) {
+    } else if ([method isEqualToString:NSURLAuthenticationMethodClientCertificate]) {
         Debug("Use NSURLAuthenticationMethodClientCertificate");
         if (self.sconn.clientCred != nil) {
-            [challenge.sender useCredential:self.sconn.clientCred forAuthenticationChallenge:challenge];
+            completionHandler(NSURLSessionAuthChallengeUseCredential, self.sconn.clientCred);
+        } else {
+            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         }
+    } else {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
-    [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
-}
-
--(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)pResponse {
-    _authenticated = YES;
-    [connection cancel];
-    [self.webView loadRequest:_FailedRequest];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    Warning("Failed to load request: %@", error);
-    [SVProgressHUD showErrorWithStatus:error.localizedDescription];
 }
 
 // Deletes cookies for a given URL
@@ -417,7 +401,8 @@
 // Lazily initialized progress view
 - (UIProgressView *)progressView {
     if (!_progressView) {
-        CGFloat y = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+        CGFloat statusBarHeight = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+        CGFloat y = statusBarHeight + self.navigationController.navigationBar.frame.size.height;
         if (IsIpad()) {
             y = self.navigationController.navigationBar.frame.size.height;
         }

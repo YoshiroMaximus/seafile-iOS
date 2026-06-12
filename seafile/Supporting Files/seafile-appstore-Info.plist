@@ -2,8 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIDesignRequiresCompatibility</key>
-	<true/>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.seafile.seafilePro.bg.refresh</string>
+		<string>com.seafile.seafilePro.bg.photobackup</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -90,8 +93,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Seafile needs to access servers on the local network.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -103,9 +104,9 @@
 	<string>This lets you backup contacts to Seafile</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>This lets you use Face ID</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Seafile needs to access servers on the local network.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Choose always allow Seafile can periodically start Camera Upload when your location changes</string>
-	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Choose always allow Seafile can periodically start Camera Upload when your location changes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Choose always allow Seafile can periodically start Camera Upload when your location changes</string>
@@ -115,43 +116,41 @@
 	<string>This lets you upload photos and videos to Seafile Account for backup</string>
 	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
 	<true/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>SeafSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>SeafStart</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>audio</string>
+		<string>processing</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreeniPhone</string>
 	<key>UILaunchStoryboardName~ipad</key>
 	<string>LaunchScreeniPad</string>
-	<key>UIMainStoryboardFile</key>
-	<string>SeafStart</string>
-	<key>UIMainStoryboardFile~ipad</key>
-	<string>SeafStart</string>
-	<key>UIPrerenderedIcon</key>
-	<true/>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarHidden~ipad</key>
 	<true/>
-	<key>UIStatusBarStyle</key>
-	<string></string>
-	<key>UIStatusBarTintParameters</key>
-	<dict>
-		<key>UINavigationBar</key>
-		<dict>
-			<key>Style</key>
-			<string>UIBarStyleDefault</string>
-			<key>Translucent</key>
-			<false/>
-		</dict>
-	</dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -168,7 +167,5 @@
 	</array>
 	<key>UISupportsDocumentBrowser</key>
 	<true/>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
 </dict>
 </plist>

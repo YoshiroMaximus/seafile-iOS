@@ -23,11 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *name;
 
 /**
- ALAssetURL
- */
-@property (nonatomic, strong) NSURL *ALAssetURL;
-
-/**
  compress
  */
 @property (nonatomic, assign) BOOL isCompress;

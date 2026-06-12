@@ -85,11 +85,10 @@ typedef void (^SeafUploadCompletionBlock)(SeafUploadFile *file, NSString *oid, N
 - (instancetype)initWithPath:(NSString *)path;
 
 /**
- * Sets the associated PHAsset and its URL.
+ * Sets the associated PHAsset.
  * @param asset The PHAsset to associate with this upload.
- * @param url The URL of the asset in the photo library.
  */
-- (void)setPHAsset:(PHAsset *)asset url:(NSURL *)url;
+- (void)setPHAsset:(PHAsset *)asset;
 
 /**
  * Cleans up resources associated with the file once it has been uploaded.

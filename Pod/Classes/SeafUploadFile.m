@@ -362,8 +362,8 @@
 
 #pragma mark - Asset Methods
 
-- (void)setPHAsset:(PHAsset *)asset url:(NSURL *)url {
-    [self.assetManager setAsset:asset url:url forFile:self];
+- (void)setPHAsset:(PHAsset *)asset {
+    [self.assetManager setAsset:asset forFile:self];
 }
 
 - (void)getDataForAssociatedAssetWithCompletion:(void (^_Nullable)(NSData * _Nullable data, NSError * _Nullable error))completion {

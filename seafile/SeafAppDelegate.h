@@ -56,10 +56,16 @@ enum {
 @property (readonly) SeafSettingsViewController *settingVC;
 @property (readonly) SeafActivityViewController *actvityVC;
 @property (readonly) MFMailComposeViewController *globalMailComposer;
-@property (readonly) NSData *deviceToken;
 
 - (void)enterAccount:(SeafConnection *)conn;
 - (void)exitAccount;
+- (BOOL)handleOpenURL:(NSURL *)url;
+
+// Scene lifecycle forwarding (called by SeafSceneDelegate)
+- (void)windowDidConnect:(UIWindow *)window;
+- (void)handleDidEnterBackground;
+- (void)handleWillEnterForeground;
+- (void)handleDidBecomeActive;
 
 - (UIViewController *)detailViewControllerAtIndex:(int)index;
 
@@ -74,5 +80,9 @@ enum {
 
 + (UIViewController *)topViewController;
 + (void)checkOpenLink:(SeafFileViewController *)c;
+
+/// The key window of the foreground-active scene (replacement for the
+/// deprecated UIApplication.keyWindow).
++ (UIWindow *)sea_keyWindow;
 
 @end

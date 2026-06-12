@@ -57,7 +57,8 @@
 
 - (UIProgressView *)progressView {
     if (!_progressView) {
-        CGFloat y = [[UIApplication sharedApplication] statusBarFrame].size.height + self.navigationController.navigationBar.frame.size.height;
+        CGFloat statusBarHeight = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+        CGFloat y = statusBarHeight + self.navigationController.navigationBar.frame.size.height;
         _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, y, self.view.bounds.size.width, 2)];
         _progressView.progressTintColor = BAR_COLOR_ORANGE;
         _progressView.trackTintColor = [UIColor whiteColor];

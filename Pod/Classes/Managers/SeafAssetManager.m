@@ -26,10 +26,10 @@ static const NSTimeInterval kLivePhotoRetryDelay = 1.0; // seconds
 
 @implementation SeafAssetManager
 
-- (void)setAsset:(PHAsset *)asset url:(NSURL *)url forFile:(SeafUploadFile *)file {
+- (void)setAsset:(PHAsset *)asset forFile:(SeafUploadFile *)file {
     if (!file || !file.model) return;
-    
-    [file.model setAsset:asset url:url identifier:asset.localIdentifier];
+
+    [file.model setAsset:asset identifier:asset.localIdentifier];
 }
 
 - (void)checkAssetWithFile:(SeafUploadFile *)file completion:(void (^)(BOOL success, NSError *error))completion {

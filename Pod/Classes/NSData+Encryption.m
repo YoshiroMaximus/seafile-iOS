@@ -56,7 +56,11 @@ hex_to_rawdata (const char *hex_str, char *rawdata, int n_bytes)
     }
     return 0;
 }
+#if __has_include(<OpenSSL/evp.h>)
+#import <OpenSSL/evp.h>
+#else
 #include <openssl/evp.h>
+#endif
 
 @implementation NSData (Encryption)
 
@@ -100,33 +104,34 @@ hex_to_rawdata (const char *hex_str, char *rawdata, int n_bytes)
 +(int)seafileDecrypt:(char *)data_out outlen:(int *)out_len datain:(const char *)data_in inlen:(const int)in_len version:(int)version key:(uint8_t *)key iv:(uint8_t *)iv
 {
     int ret;
-    EVP_CIPHER_CTX ctx;
-    EVP_CIPHER_CTX_init (&ctx);
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new ();
+    if (ctx == NULL)
+        return -1;
     if (version == 2)
-        ret = EVP_DecryptInit_ex (&ctx,
+        ret = EVP_DecryptInit_ex (ctx,
                                   EVP_aes_256_cbc(), /* cipher mode */
                                   NULL, /* engine, NULL for default */
                                   key,  /* derived key */
                                   iv);  /* initial vector */
     else if (version == 1)
-        ret = EVP_DecryptInit_ex (&ctx,
+        ret = EVP_DecryptInit_ex (ctx,
                                   EVP_aes_128_cbc(), /* cipher mode */
                                   NULL, /* engine, NULL for default */
                                   key,  /* derived key */
                                   iv);  /* initial vector */
     else
-        ret = EVP_DecryptInit_ex (&ctx,
+        ret = EVP_DecryptInit_ex (ctx,
                                   EVP_aes_128_ecb(), /* cipher mode */
                                   NULL, /* engine, NULL for default */
                                   key,  /* derived key */
                                   iv);  /* initial vector */
     if (ret == DEC_FAILURE)
-        return -1;
+        goto dec_error;
 
     int update_len, final_len;
 
     /* Do the decryption. */
-    ret = EVP_DecryptUpdate (&ctx,
+    ret = EVP_DecryptUpdate (ctx,
                              (unsigned char*)data_out,
                              &update_len,
                              (unsigned char*)data_in,
@@ -136,7 +141,7 @@ hex_to_rawdata (const char *hex_str, char *rawdata, int n_bytes)
         goto dec_error;
 
     /* Finish the possible partial block. */
-    ret = EVP_DecryptFinal_ex (&ctx,
+    ret = EVP_DecryptFinal_ex (ctx,
                                (unsigned char*)data_out + update_len,
                                &final_len);
     *out_len = update_len + final_len;
@@ -144,12 +149,12 @@ hex_to_rawdata (const char *hex_str, char *rawdata, int n_bytes)
     if (ret == DEC_FAILURE || *out_len > in_len)
         goto dec_error;
 
-    EVP_CIPHER_CTX_cleanup (&ctx);
+    EVP_CIPHER_CTX_free (ctx);
     return 0;
 
 dec_error:
 
-    EVP_CIPHER_CTX_cleanup (&ctx);
+    EVP_CIPHER_CTX_free (ctx);
 
     *out_len = -1;
     return -1;
@@ -158,28 +163,31 @@ dec_error:
 +(int)seafileEncrypt:(char **)data_out outlen:(int *)out_len datain:(const char *)data_in inlen:(const int)in_len version:(int)version key:(uint8_t *)key iv:(uint8_t *)iv
 {
     int ret, blks;
-    EVP_CIPHER_CTX ctx;
-    EVP_CIPHER_CTX_init (&ctx);
+    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new ();
+    if (ctx == NULL)
+        return -1;
     if (version == 2)
-        ret = EVP_EncryptInit_ex (&ctx,
+        ret = EVP_EncryptInit_ex (ctx,
                                   EVP_aes_256_cbc(), /* cipher mode */
                                   NULL, /* engine, NULL for default */
                                   key,  /* derived key */
                                   iv);  /* initial vector */
     else if (version == 1)
-        ret = EVP_EncryptInit_ex (&ctx,
+        ret = EVP_EncryptInit_ex (ctx,
                                   EVP_aes_128_cbc(), /* cipher mode */
                                   NULL, /* engine, NULL for default */
                                   key,  /* derived key */
                                   iv);  /* initial vector */
     else
-        ret = EVP_EncryptInit_ex (&ctx,
+        ret = EVP_EncryptInit_ex (ctx,
                                   EVP_aes_128_ecb(), /* cipher mode */
                                   NULL, /* engine, NULL for default */
                                   key,  /* derived key */
                                   iv);  /* initial vector */
-    if (ret == DEC_FAILURE)
+    if (ret == DEC_FAILURE) {
+        EVP_CIPHER_CTX_free (ctx);
         return -1;
+    }
 
     blks = (in_len / BLK_SIZE) + 1;
     *data_out = (char *)malloc (blks * BLK_SIZE);
@@ -190,7 +198,7 @@ dec_error:
     int update_len, final_len;
 
     /* Do the encryption. */
-    ret = EVP_EncryptUpdate (&ctx,
+    ret = EVP_EncryptUpdate (ctx,
                              (unsigned char*)*data_out,
                              &update_len,
                              (unsigned char*)data_in,
@@ -201,7 +209,7 @@ dec_error:
 
 
     /* Finish the possible partial block. */
-    ret = EVP_EncryptFinal_ex (&ctx,
+    ret = EVP_EncryptFinal_ex (ctx,
                                (unsigned char*)*data_out + update_len,
                                &final_len);
 
@@ -211,12 +219,12 @@ dec_error:
     if (ret == ENC_FAILURE || *out_len != (blks * BLK_SIZE))
         goto enc_error;
 
-    EVP_CIPHER_CTX_cleanup (&ctx);
+    EVP_CIPHER_CTX_free (ctx);
 
     return 0;
 
 enc_error:
-    EVP_CIPHER_CTX_cleanup (&ctx);
+    EVP_CIPHER_CTX_free (ctx);
     *out_len = -1;
 
     if (*data_out != NULL)

@@ -13,34 +13,12 @@
 #pragma mark - Navigation Bar Appearance
 
 + (void)applyStandardAppearanceToNavigationController:(UINavigationController *)navigationController {
-    // Set navigation bar title text attributes
-    NSDictionary *titleAttributes = @{NSForegroundColorAttributeName: [UIColor blackColor]};
-    navigationController.navigationBar.titleTextAttributes = titleAttributes;
-    
-    // Set navigation bar style
-    navigationController.navigationBar.barStyle = UIBarStyleDefault;
-    
-    // Configure navigation bar appearance based on iOS version
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-        [appearance configureWithOpaqueBackground];
-        appearance.backgroundColor = [UIColor whiteColor];
-        appearance.shadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1]; // Subtle shadow
-        
-        navigationController.navigationBar.standardAppearance = appearance;
-        navigationController.navigationBar.scrollEdgeAppearance = appearance;
-        
-        // Ensure navigation bar buttons are dark to contrast with white background
-        navigationController.navigationBar.tintColor = [UIColor blackColor];
-    } else {
-        // Handle styling for iOS versions below 15
-        navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-        navigationController.navigationBar.translucent = NO;
-        navigationController.navigationBar.tintColor = [UIColor blackColor];
-        
-        // Add bottom hairline
-        navigationController.navigationBar.shadowImage = [self createSinglePixelImageWithColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1]];
-    }
+    // Use the system (Liquid Glass) bar appearance; only adjust text/tint to
+    // semantic colors so the bar adapts to light and dark mode.
+    navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor labelColor]};
+    navigationController.navigationBar.standardAppearance = [[UINavigationBarAppearance alloc] init];
+    navigationController.navigationBar.scrollEdgeAppearance = nil;
+    navigationController.navigationBar.tintColor = [UIColor labelColor];
 }
 
 #pragma mark - Title View
@@ -50,7 +28,7 @@
     UILabel *titleLabel = [[UILabel alloc] init];
     titleLabel.text = title ?: @"";
     titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold]; // Use system font
-    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.textColor = [UIColor labelColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     
     // Calculate maximum width - specified percentage of screen width
@@ -76,14 +54,10 @@
     // Create more precise back button using custom view
     UIButton *customBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    // Get original image
-    UIImage *originalImage = [UIImage imageNamed:@"arrowLeft_black"];
-    
-    // Apply tint if color specified
-    if (color) {
-        originalImage = [self imageWithTintColor:color image:originalImage];
-    }
-    
+    // Template-render the arrow so it follows tint and adapts to dark mode
+    UIImage *originalImage = [[UIImage imageNamed:@"arrowLeft_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    customBackButton.tintColor = color ?: [UIColor labelColor];
+
     [customBackButton setImage:originalImage forState:UIControlStateNormal];
     
     // Set button size and hit area

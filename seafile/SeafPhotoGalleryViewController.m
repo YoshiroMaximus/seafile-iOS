@@ -7,6 +7,8 @@
 //
 
 #import "SeafPhotoGalleryViewController.h"
+#import "SeafAppDelegate.h"
+#import "Utils.h"
 #import "SeafNavigationBarStyler.h"
 #import "SeafPhotoContentViewController.h"
 #import "Constants.h"
@@ -3671,7 +3673,7 @@ static UIColor *SeafGalleryChromeVisibleBackground(void) {
             }
         }
     }
-    return [UIApplication sharedApplication].keyWindow;
+    return [SeafAppDelegate sea_keyWindow];
 }
 
 #pragma mark - Hero navigation factory

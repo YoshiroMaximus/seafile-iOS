@@ -126,8 +126,6 @@ typedef void (^CustomInputViewPresenterBlock)(NSString *title, NSString *placeho
 /// Generate a default error object.
 + (NSError *)defaultError;
 
-/// Convert a file URL and identifier to an ALAsset URL.
-+ (NSString *)convertToALAssetUrl:(NSString *)fileURL andIdentifier:(NSString *)identifier;
 
 /// Generate a temporary file path for a given filename.
 + (NSURL *)generateFileTempPath:(NSString *)name;

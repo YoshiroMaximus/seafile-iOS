@@ -7,7 +7,6 @@
 
 #import "SeafPhotoAsset.h"
 #import "Utils.h"
-#import <objc/runtime.h>
 #import "Debug.h"
 
 @interface SeafPhotoAsset ()
@@ -26,8 +25,7 @@
     if (self) {
         _isCompress = isCompress;
         _localIdentifier = asset.localIdentifier;
-        _ALAssetURL = [self assetURL:asset];
-        
+
         // Detect Live Photo and extract resources
         [self detectLivePhotoFromAsset:asset];
         
@@ -117,23 +115,6 @@
     NSString *dateStr = [dateFormatter stringFromDate:date];
     name = [NSString stringWithFormat:@"IMG_%@_%@", dateStr, name];
     return name;
-}
-
-- (NSURL *)assetURL:(PHAsset *)asset {
-    NSURL *URL;
-    unsigned int count;
-    objc_property_t *propertyList = class_copyPropertyList([asset class], &count);
-    for (unsigned int i = 0; i < count; i++) {
-        const char *propertyName = property_getName(propertyList[i]);
-        if ([[NSString stringWithUTF8String:propertyName] isEqualToString:@"ALAssetURL"]) {
-            if ([[asset valueForKey:@"ALAssetURL"] isKindOfClass:[NSURL class]]) {//may be not NSURL
-                URL = [asset valueForKey:@"ALAssetURL"];
-            }
-            break;
-        }
-    }
-    free(propertyList);
-    return URL;
 }
 
 - (NSString *)uploadNameWithLivePhotoEnabled:(BOOL)livePhotoEnabled

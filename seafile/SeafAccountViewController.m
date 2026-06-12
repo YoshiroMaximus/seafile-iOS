@@ -16,7 +16,6 @@
 #import "SecurityUtilities.h"
 #import "UIViewController+Extend.h"
 #import "Debug.h"
-#import <openssl/x509.h>
 #import "SeafPrivacyPolicyViewController.h"
 #import "SeafDataTaskManager.h"
 #import "SeafAccountTaskQueue.h"
@@ -309,15 +308,7 @@
     }
     [self.serverTextField setDelegate:self];
     
-    // Setup navigation bar appearance for iOS 15 and later.
     self.navigationController.navigationBar.tintColor = BAR_COLOR;
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
-        barAppearance.backgroundColor = [UIColor whiteColor];
-        
-        self.navigationController.navigationBar.standardAppearance = barAppearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barAppearance;
-    }
 }
 
 - (void)didReceiveMemoryWarning

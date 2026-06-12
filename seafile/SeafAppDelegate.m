@@ -7,6 +7,7 @@
 //
 
 #import <Photos/Photos.h>
+#import <BackgroundTasks/BackgroundTasks.h>
 #import "SVProgressHUD.h"
 #import "AFNetworking.h"
 
@@ -21,11 +22,14 @@
 #import "SeafWechatHelper.h"
 #import "SeafCustomInputAlertViewController.h"
 
+// BGTaskScheduler identifiers; must match BGTaskSchedulerPermittedIdentifiers
+// in Info.plist.
+static NSString * const kSeafBGRefreshTaskId = @"com.seafile.seafilePro.bg.refresh";
+static NSString * const kSeafBGProcessingTaskId = @"com.seafile.seafilePro.bg.photobackup";
+
 @interface SeafAppDelegate () <UITabBarControllerDelegate, CLLocationManagerDelegate, WXApiDelegate>
 
 @property UIBackgroundTaskIdentifier bgTask;
-@property (nonatomic, strong) NSTimer *bgTaskTimer;
-@property (nonatomic, assign) NSInteger bgTaskNum;
 
 @property NSInteger moduleIdx;
 @property (readonly) UITabBarController *tabbarController;
@@ -111,11 +115,6 @@
             }
         }
     }
-    // Register device for push notifications if token available.
-#if !(TARGET_IPHONE_SIMULATOR)
-    if (self.deviceToken)
-        [conn registerDevice:self.deviceToken];
-#endif
     return updated;
 }
 
@@ -250,7 +249,7 @@
     return false;
 }
 
-- (BOOL)application:(UIApplication*)application handleOpenURL:(NSURL*)url
+- (BOOL)handleOpenURL:(NSURL *)url
 {
     Debug("handleOpenURL: %@", url);
     if ([url.host isEqualToString:@"platformId=wechat"]) {
@@ -260,18 +259,9 @@
     }
 }
 
-
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
-    Debug("Calling Application Bundle ID: %@, url: %@", sourceApplication, url);
-    if ([url.host isEqualToString:@"platformId=wechat"]) {
-        return [WXApi handleOpenURL:url delegate:self];
-    } else {
-        return [self openURL:url];
-    }
+    return [self handleOpenURL:url];
 }
 
 - (void)photosDidChange:(NSNotification *)notification
@@ -337,29 +327,12 @@
     [[UITabBar appearance] setTintColor:[UIColor colorWithRed:238.0f/256 green:136.0f/256 blue:51.0f/255 alpha:1.0]];
     [SeafGlobal.sharedObject loadAccounts];
 
-    self.window.backgroundColor = [UIColor whiteColor];
     self.autoBackToDefaultAccount = false;
     _monitors = [[NSMutableArray alloc] init];
-    _startNav.view.backgroundColor = [UIColor whiteColor];
-    _startNav = (UINavigationController *)self.window.rootViewController;
-
-    _startVC = (StartViewController *)_startNav.topViewController;
-
-
-#if !(TARGET_IPHONE_SIMULATOR)
-    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
-#endif
 
     NSDictionary *locationOptions = [launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey];
     if (locationOptions) {
         Debug("Location: %@", locationOptions);
-    }
-    NSDictionary *dict = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (dict) {
-        [self application:application didReceiveRemoteNotification:dict];
-    } else {
-        [self.startVC performSelector:@selector(selectDefaultAccount:) withObject:^(bool success) {} afterDelay:0.5f];
     }
 
     self.bgTask = UIBackgroundTaskInvalid;
@@ -367,35 +340,43 @@
     @weakify(self);
     self.expirationHandler = ^{
         @strongify(self);
-        Debug("Expired, Time Remain = %f, restart background task.", [application backgroundTimeRemaining]);
-        if (@available(iOS 13.0, *)) {
-            if (self.bgTask != UIBackgroundTaskInvalid) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[UIApplication sharedApplication] endBackgroundTask:self.bgTask];
-                    self.bgTask = UIBackgroundTaskInvalid;
-                });
+        Debug("Expired, Time Remain = %f.", [application backgroundTimeRemaining]);
+        if (self.bgTask != UIBackgroundTaskInvalid) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] endBackgroundTask:self.bgTask];
+                self.bgTask = UIBackgroundTaskInvalid;
+            });
+        }
+
+        self.needReset = YES;
+        for (SeafConnection *conn in SeafGlobal.sharedObject.conns) {
+            if (conn.accountIdentifier) {
+                SeafAccountTaskQueue *accountQueue = [SeafDataTaskManager.sharedObject accountQueueForConnection:conn];
+                [accountQueue pauseAllTasks];
             }
-            
-            self.needReset = YES;
-            for (SeafConnection *conn in SeafGlobal.sharedObject.conns) {
-                if (conn.accountIdentifier) {
-                    SeafAccountTaskQueue *accountQueue = [SeafDataTaskManager.sharedObject accountQueueForConnection:conn];
-                    [accountQueue pauseAllTasks];
-                }
-            }
-        } else {
-            //not work in iOS 13, and while call in app  become active next time
-            [self startBackgroundTask];
         }
     };
+
+    [self registerBackgroundTasks];
 
     [SVProgressHUD setBackgroundColor:[UIColor colorWithRed:250.0/256 green:250.0/256 blue:250.0/256 alpha:1.0]];
 
     [self performSelectorInBackground:@selector(delayedInit) withObject:nil];
 
-    [UIApplication sharedApplication].delegate.window.backgroundColor = [UIColor whiteColor];
-
     return YES;
+}
+
+// Called by SeafSceneDelegate once UIKit has created the scene's window and
+// loaded the SeafStart storyboard root. Keeps self.window as the canonical
+// handle for the rest of the codebase.
+- (void)windowDidConnect:(UIWindow *)window
+{
+    self.window = window;
+    self.window.backgroundColor = [UIColor systemBackgroundColor];
+    _startNav = (UINavigationController *)self.window.rootViewController;
+    _startVC = (StartViewController *)_startNav.topViewController;
+
+    [self.startVC performSelector:@selector(selectDefaultAccount:) withObject:^(bool success) {} afterDelay:0.5f];
 }
 
 - (void)enterBackground
@@ -403,7 +384,8 @@
     Debug("Enter background");
     self.background = YES;
     [self startBackgroundTask];
-    
+    [self scheduleBackgroundTasks];
+
     for (SeafConnection *conn in SeafGlobal.sharedObject.conns) {
         if (conn.accountIdentifier) {
             [conn cleanupOrphanedFileStatuses];
@@ -411,83 +393,122 @@
     }
 }
 
-// Background tasks management to ensure the app can continue operations when sent to background.
+// Short-term background grace window (~30s) to let in-flight transfers finish.
 - (void)startBackgroundTask {
-    // Start the long-running task.
     if (![self shouldContinue]) {
         return;
     }
-    self.bgTaskNum = 0;
     UIApplication* app = [UIApplication sharedApplication];
     if (UIBackgroundTaskInvalid != self.bgTask) {
         [app endBackgroundTask:self.bgTask];
         self.bgTask = UIBackgroundTaskInvalid;
     }
     Debug("start background task");
-    self.bgTaskTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(bgTaskCount) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.bgTaskTimer forMode:NSRunLoopCommonModes];
     self.bgTask = [app beginBackgroundTaskWithExpirationHandler:self.expirationHandler];
 }
 
-- (void)bgTaskCount {
-    if (self.bgTaskNum < 3000) {
-        self.bgTaskNum++;
-    } else {
-        self.bgTaskNum = 0;
-        [self.bgTaskTimer invalidate];
-        self.bgTaskTimer = nil;
-        [[UIApplication sharedApplication] endBackgroundTask:self.bgTask];
+#pragma mark - BGTaskScheduler
+
+- (void)registerBackgroundTasks
+{
+    @weakify(self);
+    [BGTaskScheduler.sharedScheduler registerForTaskWithIdentifier:kSeafBGRefreshTaskId
+                                                        usingQueue:nil
+                                                     launchHandler:^(BGAppRefreshTask *task) {
+        @strongify(self);
+        [self handleBackgroundTask:task];
+    }];
+    [BGTaskScheduler.sharedScheduler registerForTaskWithIdentifier:kSeafBGProcessingTaskId
+                                                        usingQueue:nil
+                                                     launchHandler:^(BGProcessingTask *task) {
+        @strongify(self);
+        [self handleBackgroundTask:task];
+    }];
+}
+
+// Submit requests for future background launches; called whenever the app
+// moves to the background and after a background task runs.
+- (void)scheduleBackgroundTasks
+{
+    BOOL hasAutoSync = NO;
+    for (SeafConnection *conn in SeafGlobal.sharedObject.conns) {
+        if (conn.inAutoSync) hasAutoSync = YES;
+    }
+    if (!hasAutoSync && ![self shouldContinue]) return;
+
+    BGAppRefreshTaskRequest *refresh = [[BGAppRefreshTaskRequest alloc] initWithIdentifier:kSeafBGRefreshTaskId];
+    refresh.earliestBeginDate = [NSDate dateWithTimeIntervalSinceNow:15 * 60];
+    NSError *error = nil;
+    if (![BGTaskScheduler.sharedScheduler submitTaskRequest:refresh error:&error]) {
+        Debug("Failed to submit refresh task: %@", error);
+    }
+
+    BGProcessingTaskRequest *processing = [[BGProcessingTaskRequest alloc] initWithIdentifier:kSeafBGProcessingTaskId];
+    processing.requiresNetworkConnectivity = YES;
+    processing.requiresExternalPower = NO;
+    error = nil;
+    if (![BGTaskScheduler.sharedScheduler submitTaskRequest:processing error:&error]) {
+        Debug("Failed to submit processing task: %@", error);
     }
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+- (void)handleBackgroundTask:(BGTask *)task
 {
-    Debug("token=%@, %ld\n", deviceToken, (unsigned long)deviceToken.length);
-    _deviceToken = deviceToken;
-    if (self.deviceToken)
-        [SeafGlobal.sharedObject.connection registerDevice:self.deviceToken];
-}
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-    Debug("error=%@", error);
-}
+    Debug("Background task launched: %@", task.identifier);
+    [self scheduleBackgroundTasks];
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-    NSString *status __attribute__((unused)) = [NSString stringWithFormat:@"Notification received:\n%@",[userInfo description]];
-    NSString *badgeStr = [[userInfo objectForKey:@"aps"] objectForKey:@"badge"];
-    NSDictionary *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
-    NSArray *args = [alert objectForKey:@"loc-args"];
-    Debug("status=%@, badge=%@", status, badgeStr);
-    if ([args isKindOfClass:[NSArray class]] && args.count == 2) {
-        NSString *username = [args objectAtIndex:0];
-        NSString *server = [args objectAtIndex:1];
-        if (badgeStr && [badgeStr intValue] > 0) {
-            SeafConnection *connection = [[SeafGlobal sharedObject] getConnection:server username:username];
-            if (!connection) return;
-            self.window.backgroundColor = [UIColor whiteColor];
-            self.window.rootViewController = self.startNav;
-            [self.window makeKeyAndVisible];
-            [self.startVC checkSelectAccount:connection];
+    __block id observer = nil;
+    NSObject *completionLock = [NSObject new];
+    __block BOOL completed = NO;
+    void (^finish)(BOOL) = ^(BOOL success) {
+        @synchronized (completionLock) {
+            if (completed) return;
+            completed = YES;
+        }
+        if (observer) {
+            [[NSNotificationCenter defaultCenter] removeObserver:observer];
+            observer = nil;
+        }
+        [task setTaskCompletedWithSuccess:success];
+    };
+
+    task.expirationHandler = ^{
+        self.needReset = YES;
+        for (SeafConnection *conn in SeafGlobal.sharedObject.conns) {
+            if (conn.accountIdentifier) {
+                [[SeafDataTaskManager.sharedObject accountQueueForConnection:conn] pauseAllTasks];
+            }
+        }
+        finish(NO);
+    };
+
+    // Kick photo backup and resume pending transfers for each account.
+    for (SeafConnection *conn in SeafGlobal.sharedObject.conns) {
+        if (conn.inAutoSync) [conn photosDidChange:nil];
+        if (conn.accountIdentifier) {
+            [[SeafDataTaskManager.sharedObject accountQueueForConnection:conn] resumeAllTasks];
         }
     }
+
+    // Complete once the transfer queues drain.
+    observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"SeafUploadTaskStatusChanged"
+                                                                 object:nil
+                                                                  queue:NSOperationQueue.mainQueue
+                                                             usingBlock:^(NSNotification *note) {
+        if (![self shouldContinue]) finish(YES);
+    }];
+    if (![self shouldContinue]) finish(YES);
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
+- (void)handleDidEnterBackground
 {
     [self enterBackground];
-    
+
     //not used
     for (id <SeafBackgroundMonitor> monitor in _monitors) {
         [monitor enterBackground];
     }
-    
+
     //Account Status
     if (self.window.rootViewController != self.startNav && SeafGlobal.sharedObject.connection.touchIdEnabled) {
         Debug("hiding contents when enter background");
@@ -497,13 +518,13 @@
         self.autoBackToDefaultAccount = false;
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
+- (void)handleWillEnterForeground
 {
     Debug("Seafile will enter foreground");
-    [application endBackgroundTask:self.bgTask];
-    self.bgTaskNum = 0;
-    [self.bgTaskTimer invalidate];
-    self.bgTaskTimer = nil;
+    if (self.bgTask != UIBackgroundTaskInvalid) {
+        [[UIApplication sharedApplication] endBackgroundTask:self.bgTask];
+        self.bgTask = UIBackgroundTaskInvalid;
+    }
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.needReset == YES) {
@@ -512,16 +533,16 @@
                 if (!conn.accountIdentifier) {
                     continue;
                 }
-                
+
                 [[SeafDataTaskManager.sharedObject accountQueueForConnection:conn] resumeAllTasks];
             }
         }
     });
-    
+
     for (id <SeafBackgroundMonitor> monitor in _monitors) {
         [monitor enterForeground];
     }
-    
+
     // if is FileVC refresh data and view
     UIViewController *topViewController = [self topViewController];
     if ([topViewController respondsToSelector:@selector(loadDataFromServerAndRefresh)]) {
@@ -529,23 +550,17 @@
     }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)handleDidBecomeActive
 {
     if (!self.background)
         return;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [application cancelAllLocalNotifications];
     self.background = false;
     if (self.autoBackToDefaultAccount) {
         self.autoBackToDefaultAccount = false;
         Debug("Verify TouchId and go back to the last account.");
         [self.startVC selectDefaultAccount:^(bool success) {}];
     }
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    // Saves changes in the application's managed object context before the application terminates.
 }
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
@@ -587,11 +602,7 @@
     }
     self.viewControllers = [NSArray arrayWithArray:tabs.viewControllers];
     _tabbarController = tabs;
-    _tabbarController.navigationController.navigationBar.backgroundColor = [UIColor whiteColor];
     _tabbarController.delegate = self;
-    if (ios7)
-        _tabbarController.view.backgroundColor = [UIColor colorWithRed:150.0f/255 green:150.0f/255 blue:150.0f/255 alpha:1];
-
 }
 
 - (UITabBarController *)tabbarController
@@ -844,6 +855,19 @@ new identifier is "'mtime' + 'repoId' + 'path'"
                 break;
         }
     }
+}
+
++ (UIWindow *)sea_keyWindow {
+    UIWindowScene *fallbackScene = nil;
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        if (scene.activationState == UISceneActivationStateForegroundActive) {
+            return windowScene.keyWindow ?: windowScene.windows.firstObject;
+        }
+        if (!fallbackScene) fallbackScene = windowScene;
+    }
+    return fallbackScene.keyWindow ?: fallbackScene.windows.firstObject;
 }
 
 #pragma mark topViewController

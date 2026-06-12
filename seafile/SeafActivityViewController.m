@@ -73,14 +73,6 @@ typedef void (^ModificationHandler)(NSString *repoId, NSString *path);
     // Initialize loading view
     self.loadingView = [SeafLoadingView loadingViewWithParentView:self.view];
     
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
-        barAppearance.backgroundColor = [UIColor whiteColor];
-        
-        self.navigationController.navigationBar.standardAppearance = barAppearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barAppearance;
-    }
-    
     // Initialize basic properties
     self.eventsMore = true;
     self.eventsOffset = 0;

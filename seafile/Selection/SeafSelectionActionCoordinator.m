@@ -4,6 +4,8 @@
 //
 
 #import "SeafSelectionActionCoordinator.h"
+#import "SeafAppDelegate.h"
+#import "Utils.h"
 
 #import "SeafGlobal.h"
 #import "SeafActionsManager.h"
@@ -338,7 +340,7 @@ typedef NS_ENUM(NSInteger, SeafSelectionMediaClass) {
             if (!self.aggregateOverlayView) {
                 // Backdrop to block interactions
                 if (!self.aggregateBackdropView) {
-                    UIView *container = self.hostVC.view.window ?: UIApplication.sharedApplication.keyWindow ?: self.hostVC.view;
+                    UIView *container = self.hostVC.view.window ?: [SeafAppDelegate sea_keyWindow] ?: self.hostVC.view;
                     UIView *backdrop = [[UIView alloc] initWithFrame:container.bounds];
                     backdrop.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.35];
                     backdrop.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -921,7 +923,7 @@ typedef NS_ENUM(NSInteger, SeafSelectionMediaClass) {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!self.aggregateOverlayView) {
             if (!self.aggregateBackdropView) {
-                UIView *container = self.hostVC.view.window ?: UIApplication.sharedApplication.keyWindow ?: self.hostVC.view;
+                UIView *container = self.hostVC.view.window ?: [SeafAppDelegate sea_keyWindow] ?: self.hostVC.view;
                 UIView *backdrop = [[UIView alloc] initWithFrame:container.bounds];
                 backdrop.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.35];
                 backdrop.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

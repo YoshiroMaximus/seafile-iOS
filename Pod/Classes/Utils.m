@@ -740,19 +740,8 @@ static CustomInputViewPresenterBlock _sharedCustomInputPresenter = nil;
     return error;
 }
 
-+ (NSString *)convertToALAssetUrl:(NSString *)fileURL andIdentifier:(NSString *)identifier {
-    NSString *name = [identifier componentsSeparatedByString:@"/"].firstObject;
-    NSString *ext = fileURL.pathExtension.uppercaseString;
-    
-    if (name && ext) {
-        return [NSString stringWithFormat:@"assets-library://asset/asset.%@?id=%@&ext=%@", ext, name, ext];
-    } else {
-        return nil;
-    }
-}
-
 + (NSURL *)generateFileTempPath:(NSString *)name {
-    NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[name stringByAddingPercentEscapesUsingEncoding:NSUTF16StringEncoding]];
+    NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[name stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet]];
     NSURL *tempURL = [NSURL fileURLWithPath:tempPath isDirectory:NO];
     if ([[NSFileManager defaultManager] fileExistsAtPath:tempPath]) {
         NSError *error;

@@ -20,7 +20,6 @@
 
 // Resource related
 @property (nonatomic, strong) PHAsset *asset;
-@property (nonatomic, strong) NSURL *assetURL;
 @property (nonatomic, copy) NSString *assetIdentifier;
 
 // Live Photo / Motion Photo support
@@ -37,6 +36,6 @@
 
 // Initialization methods
 - (instancetype)initWithPath:(NSString *)path;
-- (void)setAsset:(PHAsset *)asset url:(NSURL *)url identifier:(NSString *)identifier;
+- (void)setAsset:(PHAsset *)asset identifier:(NSString *)identifier;
 
 @end 

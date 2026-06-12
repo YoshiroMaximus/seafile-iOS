@@ -6,7 +6,7 @@
 @interface SeafAssetManager : NSObject
 
 // Set asset for a file
-- (void)setAsset:(PHAsset *)asset url:(NSURL *)url forFile:(SeafUploadFile *)file;
+- (void)setAsset:(PHAsset *)asset forFile:(SeafUploadFile *)file;
 
 // Check asset for a file
 - (void)checkAssetWithFile:(SeafUploadFile *)file completion:(void (^)(BOOL success, NSError *error))completion;

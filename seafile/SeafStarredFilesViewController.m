@@ -109,16 +109,8 @@
     
     self.navigationController.navigationBar.tintColor = BAR_COLOR;
 
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
-        barAppearance.backgroundColor = [UIColor whiteColor];
-        
-        self.navigationController.navigationBar.standardAppearance = barAppearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barAppearance;
-        
-        self.tableView.sectionHeaderTopPadding = 0;
-    }
-    
+    self.tableView.sectionHeaderTopPadding = 0;
+
     // Initialize loading view
     self.loadingView = [SeafLoadingView loadingViewWithParentView:self.view];
 
@@ -832,7 +824,7 @@
 
 - (void)showLoadingView {
     // Get the key window for proper centering in the entire screen
-    UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+    UIWindow *keyWindow = [SeafAppDelegate sea_keyWindow];
     [self.loadingView showInView:keyWindow];
 }
 

@@ -176,7 +176,7 @@
                 file.model.isLivePhoto = YES;
             }
             
-            [file setPHAsset:asset url:photoAsset.ALAssetURL];
+            [file setPHAsset:asset];
             file.udir = dir;
             [file setCompletionBlock:^(SeafUploadFile *file, NSString *oid, NSError *error) {
                 [self autoSyncFileUploadComplete:file error:error];
@@ -235,7 +235,7 @@
                 file.model.isLivePhoto = YES;
             }
             
-            [file setPHAsset:asset url:photoAsset.ALAssetURL];
+            [file setPHAsset:asset];
             file.udir = dir;
             [file setCompletionBlock:^(SeafUploadFile *file, NSString *oid, NSError *error) {
                 [self autoSyncFileUploadComplete:file error:error];

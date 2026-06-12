@@ -355,15 +355,10 @@ enum {
         self.backgroundSync = _backgroundSyncSwitch.on;
         return;
     }
-    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    CLAuthorizationStatus status = self.locationManager.authorizationStatus;
     Debug("AuthorizationStatus: %d", status);
-    SeafAppDelegate *appdelegate = (SeafAppDelegate *)[[UIApplication sharedApplication] delegate];
     if (status == kCLAuthorizationStatusNotDetermined) {
-        if (ios8) {
-            [self.locationManager requestAlwaysAuthorization];
-        } else {
-            [appdelegate startSignificantChangeUpdates];
-        }
+        [self.locationManager requestAlwaysAuthorization];
         return;
     }
     if (status != kCLAuthorizationStatusAuthorizedAlways) {
@@ -440,16 +435,7 @@ enum {
         [self updateSyncInfo];
     };
     
-    if (@available(iOS 15.0, *)) {
-        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
-        barAppearance.backgroundColor = [UIColor whiteColor];
-        
-        self.navigationController.navigationBar.standardAppearance = barAppearance;
-        self.navigationController.navigationBar.scrollEdgeAppearance = barAppearance;
-        
-        self.tableView.sectionHeaderTopPadding = 0;
-    }
-    
+    self.tableView.sectionHeaderTopPadding = 0;
     self.tableView.backgroundColor = kPrimaryBackgroundColor;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadTaskStatusChanged:) name:@"SeafUploadTaskStatusChanged" object:nil];
@@ -634,7 +620,7 @@ enum {
         // Set the frame to position it 5px to the left with smaller dimensions
         chevronImageView.frame = CGRectMake(-5, 2, 12, 16); // Reduced size from 15x20 to 12x16
         chevronImageView.contentMode = UIViewContentModeScaleAspectFit;
-        chevronImageView.tintColor = [UIColor lightGrayColor];
+        chevronImageView.tintColor = [UIColor tertiaryLabelColor];
         
         [customAccessoryView addSubview:chevronImageView];
         cell.accessoryView = customAccessoryView;
@@ -671,7 +657,7 @@ enum {
     // Create the card background view
     UIView *cardBackgroundView = [[UIView alloc] init];
     cardBackgroundView.tag = 999;
-    cardBackgroundView.backgroundColor = [UIColor whiteColor]; // Card color
+    cardBackgroundView.backgroundColor = [UIColor secondarySystemGroupedBackgroundColor]; // Card color
     cardBackgroundView.layer.cornerRadius = CELL_CORNER_RADIUS;
     cardBackgroundView.clipsToBounds = YES;
 
@@ -749,17 +735,7 @@ enum {
                 
                 // Configure navigation bar appearance
                 navController.navigationBar.tintColor = BAR_COLOR;
-                navController.navigationBar.barTintColor = [UIColor whiteColor];
-                navController.navigationBar.translucent = NO;
-                
-                if (@available(iOS 15.0, *)) {
-                    UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
-                    [appearance configureWithOpaqueBackground];
-                    appearance.backgroundColor = [UIColor whiteColor];
-                    navController.navigationBar.standardAppearance = appearance;
-                    navController.navigationBar.scrollEdgeAppearance = appearance;
-                }
-                
+
                 // Present the new view controller after dismissing any existing one
                 dispatch_async(dispatch_get_main_queue(), ^ {
                     SeafAppDelegate *appdelegate = (SeafAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -989,8 +965,9 @@ enum {
 
 #pragma mark - CLLocationManagerDelegate
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager
 {
+    CLAuthorizationStatus status = manager.authorizationStatus;
     Debug("AuthorizationStatus: %d", status);
     if (status != kCLAuthorizationStatusAuthorizedAlways) {
         _backgroundSyncSwitch.on = false;

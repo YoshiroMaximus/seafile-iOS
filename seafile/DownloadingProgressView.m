@@ -24,14 +24,9 @@
     }
     self.autoresizesSubviews = YES;
     self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    if (ios7) {
-        self.cancelBt.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-        self.cancelBt.layer.borderWidth = 0.5f;
-        self.cancelBt.layer.cornerRadius = 5.0f;
-    } else {
-        self.cancelBt.reversesTitleShadowWhenHighlighted = NO;
-        self.cancelBt.tintColor=[UIColor whiteColor];
-    }
+    self.cancelBt.layer.borderColor = [[UIColor systemGray3Color] CGColor];
+    self.cancelBt.layer.borderWidth = 0.5f;
+    self.cancelBt.layer.cornerRadius = 5.0f;
     _cancelBt.titleLabel.text = NSLocalizedString(@"Cancel download", @"Seafile");
     return self;
 }
